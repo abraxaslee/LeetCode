@@ -1,35 +1,33 @@
 # 733. Flood Fill
 # 277 / 277 test cases passed.
 # Status: Accepted
-# Runtime: 80 ms
+# Runtime: 56 ms
+# @param {Integer[][]} image
+# @param {Integer} sr
+# @param {Integer} sc
+# @param {Integer} new_color
+# @return {Integer[][]}
 # @param {Integer[][]} image
 # @param {Integer} sr
 # @param {Integer} sc
 # @param {Integer} new_color
 # @return {Integer[][]}
 def flood_fill(image, sr, sc, new_color)
-    original_color = image[sr][sc]
-    return image if new_color == original_color
-    stack = [[sr, sc]]
+    @image = image
+    @original_color = image[sr][sc]
+    @new_color = new_color
+    return image if @new_color == @original_color
 
-    dr = [-1, 0, 1, 0]
-    dc = [0, 1, 0, -1]
-
-    while !stack.empty?
-      r, c = stack.pop
-      image[r][c] = new_color
-
-      for d in 0..3
-        nr, nc = r + dr[d], c + dc[d]
-        if 0 <= nr && nr < image.length && 0 <= nc && nc < image[nr].length
-          if image[nr][nc] == original_color
-            stack.push [nr, nc]
-          end
-        end
-      end
-    end
-    image.to_s
+    fill(sr, sc)
+    return @image
 end
 
-# puts flood_fill([[1,1,1],[1,1,0],[1,0,1]],1,1,255)
-puts flood_fill([[0,0,0],[0,1,1]],1,1,1)
+def fill(r, c)
+  return if r < 0 || c < 0 || r >= @image.size || c >= @image[0].size
+  return unless @image[r][c] == @original_color
+  @image[r][c] = @new_color
+  fill(r - 1, c) # up
+  fill(r, c + 1) # right
+  fill(r + 1, c) # down
+  fill(r, c - 1) # left
+end
